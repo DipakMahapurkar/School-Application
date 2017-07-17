@@ -1,2 +1,2 @@
 # School-Application
-School Application
+Android application for Schools

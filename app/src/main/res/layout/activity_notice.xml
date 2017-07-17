@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.schoolapp.activity.NoticeActivity">
+
+    <include layout="@layout/main_toolbar" />
+    <include
+        android:id="@+id/layout_no_result"
+        android:visibility="gone"
+        layout="@layout/no_result_found" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notice_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="true"
+            android:clipToPadding="true"
+            android:scrollbars="none" />
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/material_design_android_floating_action_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            fab:menu_animationDelayPerItem="50"
+            fab:menu_backgroundColor="#CCFFFFFF"
+            fab:menu_buttonSpacing="0dp"
+            fab:menu_colorNormal="@color/grey_600"
+            fab:menu_colorPressed="@color/grey_500"
+            fab:menu_colorRipple="#99FFFFFF"
+            fab:menu_fab_hide_animation="@anim/fab_slide_out_to_right"
+            fab:menu_fab_show_animation="@anim/fab_slide_in_from_right"
+            fab:menu_fab_size="normal"
+            fab:menu_icon="@drawable/fab_add"
+            fab:menu_labels_colorNormal="#333333"
+            fab:menu_labels_colorPressed="#444444"
+            fab:menu_labels_colorRipple="#66FFFFFF"
+            fab:menu_labels_cornerRadius="@dimen/_3sdp"
+            fab:menu_labels_ellipsize="none"
+            fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+            fab:menu_labels_margin="0dp"
+            fab:menu_labels_maxLines="-1"
+            fab:menu_labels_padding="@dimen/_8sdp"
+            fab:menu_labels_paddingBottom="@dimen/_4sdp"
+            fab:menu_labels_paddingLeft="@dimen/_8sdp"
+            fab:menu_labels_paddingRight="@dimen/_8sdp"
+            fab:menu_labels_paddingTop="@dimen/_4sdp"
+            fab:menu_labels_position="left"
+            fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+            fab:menu_labels_showShadow="true"
+            fab:menu_labels_singleLine="false"
+            fab:menu_labels_textColor="@color/white"
+            fab:menu_labels_textSize="@dimen/_12sdp"
+            fab:menu_openDirection="up"
+            fab:menu_shadowColor="#66000000"
+            fab:menu_shadowRadius="@dimen/_4sdp"
+            fab:menu_shadowXOffset="@dimen/_1sdp"
+            fab:menu_shadowYOffset="@dimen/_3sdp"
+            fab:menu_showShadow="true">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_person"
+                fab:fab_label="To Student"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/grey_600"
+                fab:fab_colorPressed="@color/grey_500"
+                fab:fab_colorRipple="#99FFFFFF" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_class"
+                fab:fab_label="To Class"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/grey_600"
+                fab:fab_colorPressed="@color/grey_500"
+                fab:menu_colorRipple="#99FFFFFF" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_all_students"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_supervisor_account"
+                fab:fab_label="To All Students"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/grey_600"
+                fab:fab_colorPressed="@color/grey_500"
+                fab:fab_colorRipple="#99FFFFFF" />
+        </com.github.clans.fab.FloatingActionMenu>
+    </RelativeLayout>
+
+
+</LinearLayout>

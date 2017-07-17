@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.schoolapp.activity.HomeWorkActivity">
+
+    <include layout="@layout/main_toolbar" />
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/homework_recycler_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"/>-->
+
+    <include layout="@layout/content_timeline_list" />
+
+    <include
+        android:id="@+id/layout_no_result"
+        android:visibility="gone"
+        layout="@layout/no_result_found" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/idAddHomewworkFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/_16sdp"
+        android:clipChildren="true"
+        android:clipToPadding="true"
+        android:src="@drawable/ic_add_white_24dp"
+        android:visibility="gone"
+        app:elevation="@dimen/_5sdp" />
+
+</android.support.design.widget.CoordinatorLayout>
