@@ -78,7 +78,7 @@ public class DashboardCatListAdapter extends RecyclerView.Adapter<DashboardCatLi
                         break;
                     case 1:
                         if (Constant.USER_ROLE.equals("Teacher")) {
-                            Utils.showSnackbar(mContext, view, mContext.getString(R.string.str_montly_report_student_alert));
+                            Utils.customDialog(mContext, mContext.getString(R.string.str_montly_report_student_alert));
                         } else {
                             Utils.startActivityAfterCleanup(mContext, MonthlyReportActivity.class, mCategoryList.get(position).getCatId(), mCategoryList.get(position).getCatName());
                         }
@@ -98,7 +98,7 @@ public class DashboardCatListAdapter extends RecyclerView.Adapter<DashboardCatLi
                         break;
                     case 5:
                         if (Constant.USER_ROLE.equals("Teacher")) {
-                            Utils.showSnackbar(mContext, view, mContext.getString(R.string.str_only_for_student_alert));
+                            Utils.customDialog(mContext, mContext.getString(R.string.str_only_for_student_alert));
                         } else {
                             Utils.startActivityAfterCleanup(mContext, FeeRemainderActivity.class, mCategoryList.get(position).getCatId(), mCategoryList.get(position).getCatName());
                         }
@@ -118,7 +118,6 @@ public class DashboardCatListAdapter extends RecyclerView.Adapter<DashboardCatLi
                 }
             }
         });
-
     }
 
     @Override

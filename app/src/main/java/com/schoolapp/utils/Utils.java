@@ -1,5 +1,6 @@
 package com.schoolapp.utils;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,12 +8,18 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.schoolapp.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -118,6 +125,14 @@ public class Utils {
             e.printStackTrace();
         }
         return output.format(parsedDate);
+    }
+
+    public static void customDialog(Context context, String msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Information");
+        builder.setMessage(msg);
+        builder.setPositiveButton("OK", null);
+        builder.show();
     }
 
 //    public static void showExitDialog(final Activity activity) {
