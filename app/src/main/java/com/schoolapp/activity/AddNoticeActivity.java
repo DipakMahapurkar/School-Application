@@ -1,10 +1,8 @@
 package com.schoolapp.activity;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,15 +12,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.schoolapp.R;
+import com.schoolapp.apiModels.ClassResponseModule;
+import com.schoolapp.apiModels.DivisionResponseModule;
 import com.schoolapp.apiModels.NoticePostAPIBodyRequest;
 import com.schoolapp.apiModels.TimelineResponseModel;
+import com.schoolapp.models.ClassModule;
+import com.schoolapp.models.DivisionModule;
+import com.schoolapp.models.SubjectModule;
 import com.schoolapp.network.APICallInterface;
 import com.schoolapp.network.APIUtils;
-import com.schoolapp.utils.Constant;
 import com.schoolapp.utils.ProgressDialogUtils;
 import com.schoolapp.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import in.galaxyofandroid.spinerdialog.OnSpinerItemClick;
 import in.galaxyofandroid.spinerdialog.SpinnerDialog;
@@ -43,8 +46,10 @@ public class AddNoticeActivity extends AppCompatActivity {
 
     APICallInterface mApiCallInterface;
 
-    ArrayList<String> mClassList = new ArrayList<>();
-    ArrayList<String> mDivisionList = new ArrayList<>();
+    List<ClassModule> mClassList = new ArrayList<>();
+    List<DivisionModule> mDivisionList = new ArrayList<>();
+    ArrayList<String> mClassNameList = new ArrayList<>();
+    ArrayList<String> mDivisionNameList = new ArrayList<>();
     ArrayList<String> mRollNumberList = new ArrayList<>();
     SpinnerDialog mClassSpinnerDialog;
     SpinnerDialog mDivisionSpinnerDialog;
@@ -65,6 +70,7 @@ public class AddNoticeActivity extends AppCompatActivity {
 
         if (getBundleValue().equals("TO_STUDENT")) {
             setNoticeData();
+            getClassData();
             mClassTil.setVisibility(View.VISIBLE);
             mDivisionTil.setVisibility(View.VISIBLE);
             mRollNoTil.setVisibility(View.VISIBLE);
@@ -90,32 +96,15 @@ public class AddNoticeActivity extends AppCompatActivity {
                 }
             });
 
-            mClassSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
-                @Override
-                public void onClick(String s, int i) {
-                    mClassId = String.valueOf(i + 1);
-                    mNoticeClassNameEdt.setText(s);
-                }
-            });
-
-            mDivisionSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
-                @Override
-                public void onClick(String s, int i) {
-                    mDivisionId = String.valueOf(i + 1);
-                    mNoticeDivisionEdt.setText(s);
-                }
-            });
-
             mRollNumberSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
                 @Override
                 public void onClick(String s, int i) {
                     mNoticeRollNumberEdt.setText(s);
                 }
             });
-
-
         } else if (getBundleValue().equals("TO_CLASS")) {
             setNoticeData();
+            getClassData();
             mClassTil.setVisibility(View.VISIBLE);
             mDivisionTil.setVisibility(View.VISIBLE);
 
@@ -130,22 +119,6 @@ public class AddNoticeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     mDivisionSpinnerDialog.showSpinerDialog();
-                }
-            });
-
-            mClassSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
-                @Override
-                public void onClick(String s, int i) {
-                    mClassId = String.valueOf(i + 1);
-                    mNoticeClassNameEdt.setText(s);
-                }
-            });
-
-            mDivisionSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
-                @Override
-                public void onClick(String s, int i) {
-                    mDivisionId = String.valueOf(i + 1);
-                    mNoticeDivisionEdt.setText(s);
                 }
             });
         }
@@ -183,25 +156,85 @@ public class AddNoticeActivity extends AppCompatActivity {
         return value;
     }
 
+    private void getClassData() {
+        ProgressDialogUtils.show(this, R.string.loading_message_str);
+        mApiCallInterface.getClassAPI().enqueue(new Callback<ClassResponseModule>() {
+            @Override
+            public void onResponse(Call<ClassResponseModule> call, Response<ClassResponseModule> response) {
+                Log.d(TAG, "Subject response" + response.body());
+                int statusCode = response.body().getStatus();
+                if (statusCode == SUCCESS_STATUS_CODE && response.body().getData() != null && response.body().getData().size() >= 0) {
+                    for (int i = 0; i < response.body().getData().size(); i++) {
+                        mClassList.add(new ClassModule(response.body().getData().get(i).getId(), response.body().getData().get(i).getClassName()));
+                        mClassNameList.add(response.body().getData().get(i).getClassName());
+                        mClassSpinnerDialog = new SpinnerDialog(AddNoticeActivity.this, mClassNameList, "Select Class", R.style.DialogAnimations_SmileWindow);// With 	Animation
+                    }
+                    mClassSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+                        @Override
+                        public void onClick(String s, int i) {
+                            Log.d(TAG, "Selected item text " + s + ", Position " + i);
+                            mClassId = mClassList.get(i).getId();
+                            mNoticeClassNameEdt.setText(s);
+                        }
+                    });
+                    getDivisionData();
+                } else {
+                    Log.e(TAG, "Some thing getting wrong");
+                }
+                ProgressDialogUtils.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<ClassResponseModule> call, Throwable t) {
+                t.printStackTrace();
+                Log.e(TAG, t.getMessage());
+                ProgressDialogUtils.dismiss();
+            }
+        });
+    }
+
+    private void getDivisionData() {
+        ProgressDialogUtils.show(this, R.string.loading_message_str);
+        mApiCallInterface.getDivisionAPI().enqueue(new Callback<DivisionResponseModule>() {
+            @Override
+            public void onResponse(Call<DivisionResponseModule> call, Response<DivisionResponseModule> response) {
+                Log.d(TAG, "Subject response" + response.body());
+                int statusCode = response.body().getStatus();
+                if (statusCode == SUCCESS_STATUS_CODE && response.body().getData() != null && response.body().getData().size() >= 0) {
+                    for (int i = 0; i < response.body().getData().size(); i++) {
+                        mDivisionList.add(new DivisionModule(response.body().getData().get(i).getId(), response.body().getData().get(i).getDivision()));
+                        mDivisionNameList.add(response.body().getData().get(i).getDivision());
+                        mDivisionSpinnerDialog = new SpinnerDialog(AddNoticeActivity.this, mDivisionNameList, "Select Division", R.style.DialogAnimations_SmileWindow);// With 	Animation
+                    }
+                    mDivisionSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+                        @Override
+                        public void onClick(String s, int i) {
+                            Log.d(TAG, "Selected item text " + s + ", Position " + i);
+                            mDivisionId = mDivisionList.get(i).getId();
+                            mNoticeDivisionEdt.setText(s);
+                        }
+                    });
+                } else {
+                    Log.e(TAG, "Some thing getting wrong");
+                }
+                ProgressDialogUtils.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<DivisionResponseModule> call, Throwable t) {
+                t.printStackTrace();
+                Log.e(TAG, t.getMessage());
+                ProgressDialogUtils.dismiss();
+            }
+        });
+    }
+
     private void setNoticeData() {
-        mClassList.add("11");
-        mClassList.add("12");
-        mDivisionList.add("A");
-        mDivisionList.add("B");
-        mDivisionList.add("C");
-        mDivisionList.add("D");
-        mDivisionList.add("E");
-        mDivisionList.add("F");
-        mDivisionList.add("G");
-        mDivisionList.add("H");
         mRollNumberList.add("1");
         mRollNumberList.add("2");
         mRollNumberList.add("3");
         mRollNumberList.add("4");
         mRollNumberList.add("5");
-
-        mClassSpinnerDialog = new SpinnerDialog(this, mClassList, "Select Class", R.style.DialogAnimations_SmileWindow);// With 	Animation
-        mDivisionSpinnerDialog = new SpinnerDialog(this, mDivisionList, "Select Division", R.style.DialogAnimations_SmileWindow);// With 	Animation
         mRollNumberSpinnerDialog = new SpinnerDialog(this, mRollNumberList, "Select Roll Number", R.style.DialogAnimations_SmileWindow);// With 	Animation
     }
 
@@ -263,9 +296,10 @@ public class AddNoticeActivity extends AppCompatActivity {
                 int statusCode = response.body().getStatus();
                 if (statusCode == SUCCESS_STATUS_CODE) {
                     Utils.showToast(AddNoticeActivity.this, "Notice added successfully !!");
-                    Intent returnIntent = new Intent(AddNoticeActivity.this, NoticeActivity.class);
+                    supportFinishAfterTransition();
+                    /*Intent returnIntent = new Intent(AddNoticeActivity.this, NoticeActivity.class);
                     setResult(Activity.RESULT_CANCELED, returnIntent);
-                    finish();
+                    finish();*/
                 } else {
                     Log.e(TAG, "Some thing getting wrong");
                 }

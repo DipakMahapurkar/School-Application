@@ -8,10 +8,22 @@
     tools:context="com.schoolapp.activity.NoticeActivity">
 
     <include layout="@layout/main_toolbar" />
+
     <include
         android:id="@+id/layout_no_result"
-        android:visibility="gone"
-        layout="@layout/no_result_found" />
+        layout="@layout/no_result_found"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/add_notice_here_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/str_add_notice_here"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/_20sdp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -74,21 +86,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_person"
-                fab:fab_label="To Student"
-                fab:fab_size="mini"
                 fab:fab_colorNormal="@color/grey_600"
                 fab:fab_colorPressed="@color/grey_500"
-                fab:fab_colorRipple="#99FFFFFF" />
+                fab:fab_colorRipple="#99FFFFFF"
+                fab:fab_label="To Student"
+                fab:fab_size="mini" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab_class"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_class"
-                fab:fab_label="To Class"
-                fab:fab_size="mini"
                 fab:fab_colorNormal="@color/grey_600"
                 fab:fab_colorPressed="@color/grey_500"
+                fab:fab_label="To Class"
+                fab:fab_size="mini"
                 fab:menu_colorRipple="#99FFFFFF" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -96,11 +108,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_supervisor_account"
-                fab:fab_label="To All Students"
-                fab:fab_size="mini"
                 fab:fab_colorNormal="@color/grey_600"
                 fab:fab_colorPressed="@color/grey_500"
-                fab:fab_colorRipple="#99FFFFFF" />
+                fab:fab_colorRipple="#99FFFFFF"
+                fab:fab_label="To All Students"
+                fab:fab_size="mini" />
         </com.github.clans.fab.FloatingActionMenu>
     </RelativeLayout>
 

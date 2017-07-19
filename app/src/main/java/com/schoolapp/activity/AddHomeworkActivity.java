@@ -11,14 +11,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.schoolapp.R;
+import com.schoolapp.apiModels.ClassResponseModule;
+import com.schoolapp.apiModels.DivisionResponseModule;
 import com.schoolapp.apiModels.HomeworkPostRequestModel;
+import com.schoolapp.apiModels.SubjectResponseModule;
 import com.schoolapp.apiModels.TimelineResponseModel;
+import com.schoolapp.models.ClassModule;
+import com.schoolapp.models.DivisionModule;
+import com.schoolapp.models.SubjectModule;
 import com.schoolapp.network.APICallInterface;
 import com.schoolapp.network.APIUtils;
 import com.schoolapp.utils.ProgressDialogUtils;
 import com.schoolapp.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import in.galaxyofandroid.spinerdialog.OnSpinerItemClick;
 import in.galaxyofandroid.spinerdialog.SpinnerDialog;
@@ -37,17 +44,19 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
     EditText mHomeworkClassNameEdt, mHomeworkDivisionEdt, mHomeworkSubjectEdt, mHomeworkDescriptionEdt;
 
-    ArrayList<String> mClassList = new ArrayList<>();
-    ArrayList<String> mDivisionList = new ArrayList<>();
-    ArrayList<String> mSubjectList = new ArrayList<>();
+    List<ClassModule> mClassList = new ArrayList<>();
+    List<DivisionModule> mDivisionList = new ArrayList<>();
+    List<SubjectModule> mSubjectList = new ArrayList<>();
+    ArrayList<String> mClassNameList = new ArrayList<>();
+    ArrayList<String> mSubjectNameList = new ArrayList<>();
+    ArrayList<String> mDivisionNameList = new ArrayList<>();
     SpinnerDialog mClassSpinnerDialog;
     SpinnerDialog mDivisionSpinnerDialog;
     SpinnerDialog mSubjectSpinnerDialog;
 
     APICallInterface mApiCallInterface;
 
-    String mClassId, mSubjectId;
-
+    String mClassId, mDivisionId, mSubjectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +69,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
         setupToolbar();
 
-        setHomeWorkData();
-
+        getClassData();
         mHomeworkClassNameEdt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,55 +90,115 @@ public class AddHomeworkActivity extends AppCompatActivity {
                 mSubjectSpinnerDialog.showSpinerDialog();
             }
         });
+    }
 
-        mClassSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+    private void getClassData() {
+        ProgressDialogUtils.show(this, R.string.loading_message_str);
+        mApiCallInterface.getClassAPI().enqueue(new Callback<ClassResponseModule>() {
             @Override
-            public void onClick(String s, int i) {
-                Log.d(TAG, "Selected item text " + s + ", Position " + i);
-                mClassId = String.valueOf(i + 1);
-                mHomeworkClassNameEdt.setText(s);
+            public void onResponse(Call<ClassResponseModule> call, Response<ClassResponseModule> response) {
+                Log.d(TAG, "Subject response" + response.body());
+                int statusCode = response.body().getStatus();
+                if (statusCode == SUCCESS_STATUS_CODE && response.body().getData() != null && response.body().getData().size() >= 0) {
+                    for (int i = 0; i < response.body().getData().size(); i++) {
+                        mClassList.add(new ClassModule(response.body().getData().get(i).getId(), response.body().getData().get(i).getClassName()));
+                        mClassNameList.add(response.body().getData().get(i).getClassName());
+                        mClassSpinnerDialog = new SpinnerDialog(AddHomeworkActivity.this, mClassNameList, "Select Class", R.style.DialogAnimations_SmileWindow);// With 	Animation
+                    }
+                    mClassSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+                        @Override
+                        public void onClick(String s, int i) {
+                            Log.d(TAG, "Selected item text " + s + ", Position " + i);
+                            mClassId = mClassList.get(i).getId();
+                            mHomeworkClassNameEdt.setText(s);
+                        }
+                    });
+                    getDivisionData();
+                } else {
+                    Log.e(TAG, "Some thing getting wrong");
+                }
+                ProgressDialogUtils.dismiss();
             }
-        });
 
-        mDivisionSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
             @Override
-            public void onClick(String s, int i) {
-                Log.d(TAG, "Selected item text " + s + ", Position " + i);
-                mHomeworkDivisionEdt.setText(s);
-            }
-        });
-
-        mSubjectSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
-            @Override
-            public void onClick(String s, int i) {
-                Log.d(TAG, "Selected item text " + s + ", Position " + i);
-                mSubjectId = String.valueOf(i + 1);
-                mHomeworkSubjectEdt.setText(s);
+            public void onFailure(Call<ClassResponseModule> call, Throwable t) {
+                t.printStackTrace();
+                Log.e(TAG, t.getMessage());
+                ProgressDialogUtils.dismiss();
             }
         });
     }
 
-    private void setHomeWorkData() {
-        mClassList.add("11");
-        mClassList.add("12");
-        mDivisionList.add("A");
-        mDivisionList.add("B");
-        mDivisionList.add("C");
-        mDivisionList.add("D");
-        mDivisionList.add("E");
-        mDivisionList.add("F");
-        mDivisionList.add("G");
-        mDivisionList.add("H");
-        mSubjectList.add("Physics");
-        mSubjectList.add("Chemistry");
-        mSubjectList.add("Biology");
-        mSubjectList.add("Mathematics");
-        mSubjectList.add("English");
+    private void getDivisionData() {
+        ProgressDialogUtils.show(this, R.string.loading_message_str);
+        mApiCallInterface.getDivisionAPI().enqueue(new Callback<DivisionResponseModule>() {
+            @Override
+            public void onResponse(Call<DivisionResponseModule> call, Response<DivisionResponseModule> response) {
+                Log.d(TAG, "Subject response" + response.body());
+                int statusCode = response.body().getStatus();
+                if (statusCode == SUCCESS_STATUS_CODE && response.body().getData() != null && response.body().getData().size() >= 0) {
+                    for (int i = 0; i < response.body().getData().size(); i++) {
+                        mDivisionList.add(new DivisionModule(response.body().getData().get(i).getId(), response.body().getData().get(i).getDivision()));
+                        mDivisionNameList.add(response.body().getData().get(i).getDivision());
+                        mDivisionSpinnerDialog = new SpinnerDialog(AddHomeworkActivity.this, mDivisionNameList, "Select Division", R.style.DialogAnimations_SmileWindow);// With 	Animation
+                    }
+                    mDivisionSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+                        @Override
+                        public void onClick(String s, int i) {
+                            Log.d(TAG, "Selected item text " + s + ", Position " + i);
+                            mDivisionId = mDivisionList.get(i).getId();
+                            mHomeworkDivisionEdt.setText(s);
+                        }
+                    });
+                    getSubjectData();
+                } else {
+                    Log.e(TAG, "Some thing getting wrong");
+                }
+                ProgressDialogUtils.dismiss();
+            }
 
-        mClassSpinnerDialog = new SpinnerDialog(AddHomeworkActivity.this, mClassList, "Select Class", R.style.DialogAnimations_SmileWindow);// With 	Animation
-        mDivisionSpinnerDialog = new SpinnerDialog(AddHomeworkActivity.this, mDivisionList, "Select Division", R.style.DialogAnimations_SmileWindow);// With 	Animation
-        mSubjectSpinnerDialog = new SpinnerDialog(AddHomeworkActivity.this, mSubjectList, "Select Subject", R.style.DialogAnimations_SmileWindow);// With 	Animation
+            @Override
+            public void onFailure(Call<DivisionResponseModule> call, Throwable t) {
+                t.printStackTrace();
+                Log.e(TAG, t.getMessage());
+                ProgressDialogUtils.dismiss();
+            }
+        });
+    }
 
+    private void getSubjectData() {
+        mApiCallInterface.getSubjectsAPI().enqueue(new Callback<SubjectResponseModule>() {
+            @Override
+            public void onResponse(Call<SubjectResponseModule> call, Response<SubjectResponseModule> response) {
+                Log.d(TAG, "Subject response" + response.body());
+                int statusCode = response.body().getStatus();
+                if (statusCode == SUCCESS_STATUS_CODE && response.body().getData() != null && response.body().getData().size() >= 0) {
+                    for (int i = 0; i < response.body().getData().size(); i++) {
+                        mSubjectList.add(new SubjectModule(response.body().getData().get(i).getId(), response.body().getData().get(i).getSubjectName()));
+                        mSubjectNameList.add(response.body().getData().get(i).getSubjectName());
+                        mSubjectSpinnerDialog = new SpinnerDialog(AddHomeworkActivity.this, mSubjectNameList, "Select Subject", R.style.DialogAnimations_SmileWindow);// With 	Animation
+                    }
+                    mSubjectSpinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+                        @Override
+                        public void onClick(String s, int i) {
+                            Log.d(TAG, "Selected item text " + s + ", Position " + i);
+                            mSubjectId = mSubjectList.get(i).getId();
+                            mHomeworkSubjectEdt.setText(s);
+                        }
+                    });
+                } else {
+                    Log.e(TAG, "Some thing getting wrong");
+                }
+                ProgressDialogUtils.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<SubjectResponseModule> call, Throwable t) {
+                t.printStackTrace();
+                Log.e(TAG, t.getMessage());
+                ProgressDialogUtils.dismiss();
+            }
+        });
     }
 
     private void initialiseViews() {

@@ -113,18 +113,6 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void staticTimelineData() {
-       /* mTimelineList = new ArrayList<>();
-        mTimelineList.add(new TimelineListModel(R.drawable.image_1, "Prof. Dipak Mahapurkar", "Mon 01 Jan 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_2, "Prof. Kshitij Bande", "Mon 01 Feb 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_3, "Prof. Sujit Kadam", "Mon 01 Mar 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_4, "Prof. John Smith", "Mon 01 Apr 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_5, "Prof. Sandip Sade", "Mon 01 May 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_1, "Prof. Sachin Mahapurkar", "Mon 01 Jun 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_2, "Prof. Kshitij Bande", "Mon 01 Feb 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_3, "Prof. Sujit Kadam", "Mon 01 Mar 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_4, "Prof. John Smith", "Mon 01 Apr 2017", getString(R.string.str_timelineDescription)));
-        mTimelineList.add(new TimelineListModel(R.drawable.image_5, "Prof. Sandip Sade", "Mon 01 May 2017", getString(R.string.str_timelineDescription)));
-*/
         ProgressDialogUtils.show(this, R.string.loading_message_str);
         mApiCallInterface.getTimelineAPI().enqueue(new Callback<TimelineGetAPIResponseModel>() {
             @Override

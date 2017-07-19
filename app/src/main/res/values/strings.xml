@@ -38,4 +38,5 @@
     <string name="str_homework_subject">Subject</string>
     <string name="loading_message_str">Please wait ...</string>
     <string name="action_logout">Logout</string>
+    <string name="str_add_notice_here">Please add Notice Here !!</string>
 </resources>

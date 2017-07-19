@@ -1,14 +1,12 @@
 package com.schoolapp.network;
 
-/**
- * Created by dipak on 19/3/17.
- */
-
-
+import com.schoolapp.apiModels.ClassResponseModule;
+import com.schoolapp.apiModels.DivisionResponseModule;
 import com.schoolapp.apiModels.HomeworkGetResponseModel;
 import com.schoolapp.apiModels.HomeworkPostRequestModel;
 import com.schoolapp.apiModels.NoticeGetAPIResponseModel;
 import com.schoolapp.apiModels.NoticePostAPIBodyRequest;
+import com.schoolapp.apiModels.SubjectResponseModule;
 import com.schoolapp.apiModels.TimelineGetAPIResponseModel;
 import com.schoolapp.apiModels.TimelineResponseModel;
 import com.schoolapp.models.ApplicationPostBodyModel;
@@ -20,6 +18,7 @@ import com.schoolapp.models.UserLoginPostDataModel;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -68,4 +67,16 @@ public interface APICallInterface {
     @Headers("Content-Type: application/json")
     @POST("noticeapi.php")
     Call<TimelineResponseModel> noticePostAPI(@Body NoticePostAPIBodyRequest noticePostAPIBodyRequest);
+
+    @Headers("Content-Type: application/json")
+    @GET("dropdownapi.php/getClassDropdown")
+    Call<ClassResponseModule> getClassAPI();
+
+    @Headers("Content-Type: application/json")
+    @GET("dropdownapi.php/getDivisionDropdown")
+    Call<DivisionResponseModule> getDivisionAPI();
+
+    @Headers("Content-Type: application/json")
+    @GET("dropdownapi.php/getSubjectDropdown")
+    Call<SubjectResponseModule> getSubjectsAPI();
 }
